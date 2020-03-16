@@ -19,7 +19,6 @@ all:
 	make google_chrome
 	make media latex
 	make archives harddisk filesystem tools nautilus
-	make atom 
 	make code
 	make cyberduck gitkraken
 	make skype spotify
@@ -46,13 +45,6 @@ flatpak:
 	sudo add-apt-repository -y ppa:alexlarsson/flatpak
 	sudo apt -y install flatpak
 	flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
-
-atom:
-	curl -L https://packagecloud.io/AtomEditor/atom/gpgkey | sudo apt-key add -
-	sudo sh -c 'echo "deb [arch=amd64] https://packagecloud.io/AtomEditor/atom/any/ any main" > /etc/apt/sources.list.d/atom.list'
-	make update
-	sudo apt -y install gconf-service gconf2 gir1.2-gnomekeyring-1.0
-	sudo apt -y install atom
 
 fonts:	
 	sudo DEBIAN_FRONTEND=noninteractive apt -y install ttf-mscorefonts-installer # Install Microsoft fonts.
