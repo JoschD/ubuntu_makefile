@@ -20,13 +20,13 @@ all:
 	make media latex
 	make archives harddisk filesystem tools nautilus
 	make atom 
-	make pycharm 
+	make code
 	make cyberduck gitkraken
 	make skype spotify
 	make driverppa
 	make masterpdf
 	make behaviour
-	make conky
+	#make conky
 
 preparations:
 	sudo apt-add-repository universe
@@ -87,8 +87,7 @@ graphics:
 	sudo apt -y install inkscape
 	# Install additional graphics packages
 	sudo apt -y install graphviz dia jpegoptim mesa-utils darktable
-    sudo apt -y install ffmpeg x264 x265
-
+	sudo apt -y install ffmpeg x264 x265
 
 google_chrome:
 	rm -f google-chrome-stable_current_amd64.deb
@@ -107,7 +106,6 @@ media:
     # DVD Playback
 	sudo apt -y install libdvd-pkg
 	sudo dpkg-reconfigure libdvd-pkg
-    
 
 latex:
 	sudo apt -y install pandoc pandoc-citeproc texlive texlive-latex-extra texlive-latex-base texlive-science texlive-fonts-recommended texlive-latex-recommended texlive-lang-german texlive-xetex preview-latex-style dvipng nbibtex
@@ -144,7 +142,8 @@ spotify:
 	if sudo flatpak list | grep com.spotify.Client/x86_64/stable; then echo Spotify is already installed; else sudo flatpak -y install https://flathub.org/repo/appstream/com.spotify.Client.flatpakref; fi
 	sudo chown -R $$USER:$$USER /home/$$USER # Fix permissions of /home
 
-pycharm:
+code:
+	sudo snap install code --classic
 	sudo snap install pycharm-community --classic
 
 masterpdf:
@@ -153,9 +152,10 @@ masterpdf:
 	rm -f master-pdf-editor-4.3.89_qt5.amd64.deb
 
 eurkey:
-	wget https://eurkey.steffen.bruentjen.eu/download/debian/eurkey.deb
-	sudo dpkg -i eurkey.deb
-	rm -f eurkey.deb
+	#wget https://eurkey.steffen.bruentjen.eu/download/debian/eurkey.deb
+	#sudo dpkg -i eurkey.deb
+	#rm -f eurkey.deb
+	# already installed with newer ubuntus
 	# setxkbmap eurkey  # does not change permanently
 	dconf write /org/gnome/desktop/input-sources/sources "[('xkb', 'eurkey')]" # should set it permanently
 
