@@ -100,7 +100,9 @@ media:
 	sudo dpkg-reconfigure libdvd-pkg
 
 latex:
-	sudo apt -y install pandoc pandoc-citeproc texlive texlive-latex-extra texlive-latex-base texlive-science texlive-fonts-recommended texlive-latex-recommended texlive-lang-german texlive-xetex preview-latex-style dvipng nbibtex
+	sudo apt -y install pandoc pandoc-citeproc 
+	sudo apt -y install texlive texlive-latex-extra texlive-latex-base texlive-science texlive-fonts-recommended texlive-latex-recommended texlive-lang-german texlive-xetex 
+	sudo apt -y install preview-latex-style dvipng nbibtex latexmk
 
 harddisk:
 	sudo apt -y install smartmontools gsmartcontrol smart-notifier
