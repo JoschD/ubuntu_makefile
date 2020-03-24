@@ -1,12 +1,10 @@
-
 #
 # Ubuntu 18.04 (Bionic Beaver)
 #
-# Basic packages i usually install.
+# Basic packages I usually install.
 #
 
-
-.PHONY:	all preparations update upgrade flatpak atom fonts cyberduck python graphics google_chrome media latex harddisk filesystem tools nautilus kdenlive gitkraken skype spotify driverppa pycharm masterpdf eurkey behaviour conky
+.PHONY:	all preparations update upgrade atom fonts cyberduck python graphics google_chrome media latex harddisk filesystem tools nautilus kdenlive gitkraken skype spotify driverppa pycharm masterpdf eurkey behaviour conky
 
 all:
 	@echo "Installation of ALL targets"
@@ -15,24 +13,40 @@ all:
 	make eurkey 
 	make fonts
 	make python
-	make graphics kdenlive
+	make graphics 
 	make google_chrome
-	make media latex
+	make media media_extra
+	make latex zotero
 	make archives harddisk filesystem tools nautilus
 	make code
-	make cyberduck gitkraken
+	make gitkraken
 	make skype spotify
 	make driverppa
 	make masterpdf
 	make behaviour
-	#make conky
+
+thinky:
+	@echo "Installation of relevant targets for Thinky"
+	make preparations
+	make upgrade
+	make eurkey
+	make archives harddisk filesystem tools nautilus
+	make fonts latex
+	make zotero
+	make code python
+	make gitkraken
+	make media graphics
+	make google_chrome
+	make skype spotify
+	make driverppa
+	make masterpdf
+	make behaviour
 
 preparations:
 	sudo apt-add-repository universe
 	sudo apt-add-repository multiverse
 	sudo apt-add-repository restricted
 	make update
-	make flatpak
 	sudo apt -y install wget curl git
 
 update:
@@ -40,11 +54,6 @@ update:
 
 upgrade:
 	sudo apt -y upgrade
-
-flatpak:
-	sudo add-apt-repository -y ppa:alexlarsson/flatpak
-	sudo apt -y install flatpak
-	flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 
 fonts:	
 	sudo DEBIAN_FRONTEND=noninteractive apt -y install ttf-mscorefonts-installer # Install Microsoft fonts.
@@ -55,21 +64,15 @@ fonts:
 	# Refresh font cache
 	fc-cache -v
 
-cyberduck:
-	deb https://s3.amazonaws.com/repo.deb.cyberduck.io stable main
-	sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys FE7097963FEFBE72
-	sudo apt-get update
-	sudo apt -y install duck
-
 python:
 	make preparations
 	sudo -H apt -y install python-pip
 	sudo -H pip install --upgrade pip
 
 graphics:
-	# Remove apt package if installed and install the official flatpak version of GIMP as it more closely follows upstream GIMP vesrions
+	# Remove apt package if installed and install snap (more up-to-date) 
 	sudo apt -y remove gimp
-	if sudo flatpak list | grep org.gimp.GIMP/x86_64/stable; then echo GIMP is already installed; else sudo flatpak -y install https://flathub.org/repo/appstream/org.gimp.GIMP.flatpakref; fi
+	sudo snap install gimp
 	sudo chown -R $$USER:$$USER /home/$$USER # Fix permissions of /home
 	# The latest Krita is installed using the Krita Lime ppa
 	sudo add-apt-repository -y ppa:kritalime/ppa
@@ -94,10 +97,14 @@ archives:
 media:
 	sudo add-apt-repository ppa:mc3man/mpv-tests
 	sudo apt -y install mpv vlc ubuntu-restricted-extras libavcodec-extra libdvdread4
-	sudo flatpak -y install flathub fr.handbrake.ghb
     # DVD Playback
 	sudo apt -y install libdvd-pkg
 	sudo dpkg-reconfigure libdvd-pkg
+
+media_extra:
+	sudo snap install kdenlive
+    #  Settings->Configure Kdenlive->Playback and in the window, enable "Use GPU processing (Movit Library) -- restart Kdenlive to apply"
+	sudo snap install handbrake-jz
 
 latex:
 	sudo apt -y install pandoc pandoc-citeproc 
@@ -117,24 +124,17 @@ tools:
 nautilus:
 	sudo apt -y install nautilus-image-converter nautilus-compare nautilus-wipe
 	
-kdenlive:
-	if sudo flatpak list | grep org.kde.kdenlive/x86_64/stable; then echo kdenlive is already installed; else sudo flatpak -y install https://flathub.org/repo/appstream/org.kde.kdenlive.flatpakref; fi
-	sudo chown -R $$USER:$$USER /home/$$USER # Fix permissions of /home
-    #  Settings->Configure Kdenlive->Playback and in the window, enable "Use GPU processing (Movit Library) -- restart Kdenlive to apply"
-  
 gitkraken:
 	sudo snap install gitkraken
 
 skype:
-	if sudo flatpak list | grep com.skype.Client/x86_64/stable; then echo Skype is already installed; else sudo flatpak -y install https://flathub.org/repo/appstream/com.skype.Client.flatpakref; fi
-	sudo chown -R $$USER:$$USER /home/$$USER # Fix permissions of /home
+	sudo snap install skype
 
 driverppa:
 	sudo add-apt-repository -y ppa:graphics-drivers/ppa
 
 spotify:
-	if sudo flatpak list | grep com.spotify.Client/x86_64/stable; then echo Spotify is already installed; else sudo flatpak -y install https://flathub.org/repo/appstream/com.spotify.Client.flatpakref; fi
-	sudo chown -R $$USER:$$USER /home/$$USER # Fix permissions of /home
+	sudo snap install spotify
 
 code:
 	sudo snap install code --classic
@@ -146,18 +146,26 @@ masterpdf:
 	rm -f master-pdf-editor-4.3.89_qt5.amd64.deb
 
 eurkey:
-	#wget https://eurkey.steffen.bruentjen.eu/download/debian/eurkey.deb
-	#sudo dpkg -i eurkey.deb
-	#rm -f eurkey.deb
-	# already installed with newer ubuntus
-	# setxkbmap eurkey  # does not change permanently
-	dconf write /org/gnome/desktop/input-sources/sources "[('xkb', 'eurkey')]" # should set it permanently
+	setxkbmap eu
+	dconf write /org/gnome/desktop/input-sources/sources "[('xkb', 'eu')]"
+	echo "setxkbmap eu" >> ~/.profile
+	gsettings set org.gnome.settings-daemon.plugins.keyboard active false
 
-behaviour:	
+zotero:
+	wget -qO- https://github.com/retorquere/zotero-deb/releases/download/apt-get/install.sh | sudo bash
+	sudo apt update
+	sudo apt install zotero
+	# Fix permissons to allow auto-updates
+	sudo chmod -R a+rwx /usr/bin/zotero
+	sudo chmod -R a+rwx /opt/zotero
+	# Download .xpi's
+	# https://github.com/retorquere/zotero-better-bibtex/releases/latest
+	# https://github.com/jlegewie/zotfile/releases
+	# go to zotero Tools > Add-ons > Extensions > 'Install Add-on From File'
+
+behaviour:
 	gsettings set org.gnome.shell.extensions.dash-to-dock click-action 'minimize-or-overview' # minimize windows on dash click
 	dconf write /org/gnome/desktop/input-sources/xkb-options "['caps:swapescape']" # swap escape and capslock	
 
-conky:
-	sudo apt install conky conky-all
-	# sudo apt install libimlib2-dev  # I think not neccessary
+
 
