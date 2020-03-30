@@ -20,7 +20,7 @@ all:
 	make archives harddisk filesystem tools nautilus
 	make code
 	make gitkraken
-	make skype spotify
+	make skype spotify mattermost
 	make driverppa
 	make masterpdf
 	make behaviour
@@ -37,7 +37,7 @@ thinky:
 	make gitkraken
 	make media graphics
 	make google_chrome google_drive
-	make skype spotify
+	make skype spotify mattermost
 	make driverppa
 	make masterpdf
 	make behaviour
@@ -135,6 +135,9 @@ gitkraken:
 
 skype:
 	sudo snap install skype
+
+mattermost:
+	sudo snap install mattermost
 
 driverppa:
 	sudo add-apt-repository -y ppa:graphics-drivers/ppa
