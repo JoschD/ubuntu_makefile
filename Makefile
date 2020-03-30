@@ -14,7 +14,7 @@ all:
 	make fonts
 	make python
 	make graphics 
-	make google_chrome
+	make google_chrome google_drive
 	make media media_extra
 	make latex zotero
 	make archives harddisk filesystem tools nautilus
@@ -36,7 +36,7 @@ thinky:
 	make code python
 	make gitkraken
 	make media graphics
-	make google_chrome
+	make google_chrome google_drive
 	make skype spotify
 	make driverppa
 	make masterpdf
@@ -90,6 +90,12 @@ google_chrome:
 	sudo apt -y install libappindicator1 libindicator7
 	sudo dpkg -i google-chrome-stable_current_amd64.deb
 	rm -f google-chrome-stable_current_amd64.deb
+
+google_drive:
+	# https://github.com/odeke-em/drive
+	sudo add-apt-repository ppa:twodopeshaggy/drive
+	sudo apt-get update
+	sudo apt-get install drive
 
 archives:
 	sudo apt -y install unace unrar zip unzip p7zip-full p7zip-rar sharutils rar uudeview mpack arj cabextract file-roller
