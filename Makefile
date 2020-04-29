@@ -1,5 +1,5 @@
 #
-# Ubuntu 18.04 (Bionic Beaver)
+# Ubuntu 20.04
 #
 # Basic packages I usually install.
 #
@@ -12,7 +12,7 @@ all:
 	make upgrade
 	make eurkey 
 	make fonts
-	make python
+	make python java
 	make graphics 
 	make google_chrome google_drive
 	make media media_extra
@@ -20,7 +20,7 @@ all:
 	make archives harddisk filesystem tools nautilus
 	make code
 	make gitkraken
-	make skype spotify mattermost
+	make messenger spotify
 	make driverppa
 	make masterpdf
 	make behaviour
@@ -33,10 +33,29 @@ thinky:
 	make archives harddisk filesystem tools nautilus
 	make fonts latex
 	make zotero
-	make code python
+	make code python java
 	make gitkraken
 	make media graphics
 	make google_chrome google_drive
+	make messenger spotify
+	make masterpdf
+	make behaviour
+	make afs
+
+hurley:
+	@echo "Installation of Hurley targets"
+	make preparations
+	make upgrade
+	make eurkey 
+	make fonts
+	make python java
+	make graphics 
+	make google_chrome google_drive
+	make media media_extra
+	make latex zotero
+	make archives harddisk filesystem tools nautilus
+	make code
+	make gitkraken
 	make skype spotify mattermost
 	make driverppa
 	make masterpdf
@@ -58,7 +77,7 @@ upgrade:
 fonts:	
 	sudo DEBIAN_FRONTEND=noninteractive apt -y install ttf-mscorefonts-installer # Install Microsoft fonts.
 	mkdir -p ~/.fonts/
-	sudo apt -y install fonts-firacode fonts-hack\* fonts-cantarell lmodern ttf-aenigma ttf-georgewilliams ttf-bitstream-vera ttf-sjfonts tv-fonts
+	sudo apt -y install fonts-firacode fonts-cantarell lmodern ttf-aenigma ttf-georgewilliams ttf-bitstream-vera ttf-sjfonts tv-fonts
 	# Install all the google fonts
 	curl https://raw.githubusercontent.com/dylanmtaylor/Web-Font-Load/master/install.sh | sudo bash
 	# Refresh font cache
@@ -66,8 +85,25 @@ fonts:
 
 python:
 	make preparations
-	sudo -H apt -y install python-pip
-	sudo -H pip install --upgrade pip
+	#sudo -H apt -y install python3.7
+	#sudo -H apt -y install python3.6
+	sudo -H apt -y install python3-pip
+	sudo -H pip3 install --upgrade pip
+	sudo -H apt -y install python2.7
+	curl https://bootstrap.pypa.io/get-pip.py --output get-pip.py
+	python2.7 get-pip.py
+	rm -f get-pip.py
+
+pythonsrc:
+	sudo apt-get install -y build-essential checkinstall
+	sudo apt-get install -y libreadline-gplv2-dev libncursesw5-dev libssl-dev libsqlite3-dev tk-dev libgdbm-dev libc6-dev libbz2-dev	
+	read -p "Enter full python version number: " pyversion; \
+	sudo wget https://www.python.org/ftp/python/$${pyversion}/Python-$${pyversion}.tgz; \
+	sudo tar xzf Python-$${pyversion}.tgz; \
+	cd Python-$${pyversion};
+	sudo ./configure --enable-optimizations
+	sudo make altinstall
+	cd ..
 
 graphics:
 	# Remove apt package if installed and install snap (more up-to-date) 
@@ -90,6 +126,8 @@ google_chrome:
 	sudo apt -y install libappindicator1 libindicator7
 	sudo dpkg -i google-chrome-stable_current_amd64.deb
 	rm -f google-chrome-stable_current_amd64.deb
+	# install plugin to get gnome-plugins directly from webpages
+	sudo apt-get install chrome-gnome-shell
 
 google_drive:
 	# https://github.com/odeke-em/drive
@@ -102,7 +140,7 @@ archives:
 
 media:
 	sudo add-apt-repository ppa:mc3man/mpv-tests
-	sudo apt -y install mpv vlc ubuntu-restricted-extras libavcodec-extra libdvdread4
+	sudo apt -y install mpv vlc ubuntu-restricted-extras libavcodec-extra #libdvdread4
     # DVD Playback
 	sudo apt -y install libdvd-pkg
 	sudo dpkg-reconfigure libdvd-pkg
@@ -125,29 +163,54 @@ filesystem:
 
 tools:
 	sudo apt -y install htop password-gorilla gnome-tweaks dconf-editor
-	sudo apt -y install icedtea-8-plugin openjdk-11-jre rabbitvcs-nautilus git curl vim gparted gnome-disk-utility usb-creator-gtk baobab
+	sudo apt -y  rabbitvcs-nautilus git curl vim gparted gnome-disk-utility baobab
+
+java:
+	sudo apt -y install openjdk-11-jdk 
+	sudo apt -y install openjdk-8-jdk
+	#sudo apt -y install openjdk-11-jre
+
+nodejs:
+	curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -
+	sudo apt-get install -y nodejs
+	rm -f setup_10.x
+	
+popos:
+	make preparations
+	make nodejs
+	sudo npm install -g typescript
+	git clone https://github.com/pop-os/shell.git
+	cd shell
+	sh rebuild.sh
+	cd ..
 
 nautilus:
-	sudo apt -y install nautilus-image-converter nautilus-compare nautilus-wipe
+	sudo apt -y install nautilus-image-converter nautilus-wipe
+	#sudo apt -y install nautilus-compare # not yet in 20.04
 	
 gitkraken:
 	sudo snap install gitkraken
 
-skype:
-	sudo snap install skype
+messenger:
+	sudo snap install skype --classic
+	sudo snap install mattermost-desktop
+	sudo snap install telegram-desktop
 
-mattermost:
-	sudo snap install mattermost
-
-driverppa:
+nvidia:
+	# adds ppa for nvidia more updated drivers, you still have to find out which is the version you want
 	sudo add-apt-repository -y ppa:graphics-drivers/ppa
-
+	sudo apt update
+	read -p "Which nvidia driver version would you like: " nvidiaversion; \
+	sudo apt install -y nvidia-graphics-drivers-$${nvidiaversion};
+	sudo apt install nvidia-settings
+	
 spotify:
 	sudo snap install spotify
 
 code:
 	sudo snap install code --classic
 	sudo snap install pycharm-community --classic
+	# vscode swapescape problem: file>Preferences>Settings  >keyboard.dispatch >keyCode >restart vscode
 
 masterpdf:
 	wget https://code-industry.net/public/master-pdf-editor-4.3.89_qt5.amd64.deb
@@ -164,17 +227,41 @@ zotero:
 	wget -qO- https://github.com/retorquere/zotero-deb/releases/download/apt-get/install.sh | sudo bash
 	sudo apt update
 	sudo apt install zotero
+	rm -f install.sh
 	# Fix permissons to allow auto-updates
-	sudo chmod -R a+rwx /usr/bin/zotero
-	sudo chmod -R a+rwx /opt/zotero
+	sudo chmod -R a+rwx /usr/local/bin/zotero
+	#sudo chmod -R a+rwx /opt/zotero
 	# Download .xpi's
 	# https://github.com/retorquere/zotero-better-bibtex/releases/latest
 	# https://github.com/jlegewie/zotfile/releases
 	# go to zotero Tools > Add-ons > Extensions > 'Install Add-on From File'
+	
 
 behaviour:
 	gsettings set org.gnome.shell.extensions.dash-to-dock click-action 'minimize-or-overview' # minimize windows on dash click
-	dconf write /org/gnome/desktop/input-sources/xkb-options "['caps:swapescape']" # swap escape and capslock	
+	dconf write /org/gnome/desktop/input-sources/xkb-options "['caps:swapescape']" # swap escape and capslock
 
-
+afs:
+	# use non-standard openafs-client as ubuntu might throw 'aklog: a pioctl failed while obtaining tokens for cell cern.ch'
+	sudo add-apt-repository ppa:openafs/stable
+	sudo apt update
+	sudo apt install openafs-client openafs-modules-dkms openafs-krb5 krb5-user krb5-config
+	wget http://linux.web.cern.ch/linux/docs/krb5.conf
+	sudo mv -f ./krb5.conf /etc/krb5.conf
+	# https://gist.github.com/OmeGak/9530124
+	# https://twiki.cern.ch/twiki/bin/view/ABPComputing/AFSDebian
+	
+afsssh:
+	# add authentication forwarding to ssh config 
+	echo "" >> ~/.ssh/config
+	echo "HOST lxplus.cern.ch" >> ~/.ssh/config
+	echo "    GSSAPITrustDns yes" >> ~/.ssh/config
+	echo "    GSSAPIAuthentication yes" >> ~/.ssh/config
+	echo "    GSSAPIDelegateCredentials yes" >> ~/.ssh/config
+		
+historysearch:
+	echo "## arrow up" >> ~/.inputrc
+	echo "\"\\e[A\":history-search-backward" >> ~/.inputrc
+	echo "## arrow down" >> ~/.inputrc
+	echo "\"\\e[B\":history-search-forward" >> ~/.inputrc
 
