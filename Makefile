@@ -21,7 +21,7 @@ all:
 	make code
 	make gitkraken
 	make messenger spotify
-	make driverppa
+	make nvidia
 	make masterpdf
 	make behaviour
 
@@ -57,7 +57,7 @@ hurley:
 	make code
 	make gitkraken
 	make skype spotify mattermost
-	make driverppa
+	make nvidia
 	make masterpdf
 	make behaviour
 
