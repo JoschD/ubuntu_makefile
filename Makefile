@@ -97,7 +97,7 @@ python:
 pythonsrc:
 	sudo apt-get install -y build-essential checkinstall
 	sudo apt-get install -y libreadline-gplv2-dev libncursesw5-dev libssl-dev libsqlite3-dev tk-dev libgdbm-dev libc6-dev libbz2-dev	
-	sudo apt-get install -y libffi-dev
+	sudo apt-get install -y libffi-dev liblzma-dev
 	read -p "Enter full python version number: " pyversion; \
 	sudo wget https://www.python.org/ftp/python/$${pyversion}/Python-$${pyversion}.tgz; \
 	sudo tar xzf Python-$${pyversion}.tgz; \
@@ -221,8 +221,10 @@ masterpdf:
 eurkey:
 	setxkbmap eu
 	dconf write /org/gnome/desktop/input-sources/sources "[('xkb', 'eu')]"
-	echo "setxkbmap eu" >> ~/.profile
-	gsettings set org.gnome.settings-daemon.plugins.keyboard active false
+	setxkbmap eu -option "caps:swapescape"
+	echo "setxkbmap eu -option \"caps:swapescape\"" >> ~/.profile
+	dconf write /org/gnome/desktop/input-sources/xkb-options "['caps:swapescape']"  # swap escape and capslock	
+	gsettings set org.gnome.settings-daemon.plugins.keyboard active false  # prevent from overwriting (hopefully)
 
 zotero:
 	wget -qO- https://github.com/retorquere/zotero-deb/releases/download/apt-get/install.sh | sudo bash
@@ -239,8 +241,8 @@ zotero:
 	
 
 behaviour:
-	gsettings set org.gnome.shell.extensions.dash-to-dock click-action 'minimize-or-overview' # minimize windows on dash click
-	dconf write /org/gnome/desktop/input-sources/xkb-options "['caps:swapescape']" # swap escape and capslock
+	gsettings set org.gnome.shell.extensions.dash-to-dock click-action 'minimize-or-previews' # minimize windows on dash click
+
 
 afs:
 	# use non-standard openafs-client as ubuntu might throw 'aklog: a pioctl failed while obtaining tokens for cell cern.ch'
