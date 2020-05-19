@@ -41,6 +41,9 @@ thinky:
 	make masterpdf
 	make behaviour
 	make afs
+	
+surfy:
+
 
 hurley:
 	@echo "Installation of Hurley targets"
@@ -131,10 +134,11 @@ google_chrome:
 	sudo apt-get install chrome-gnome-shell
 
 google_drive:
+	sudo snap install drive
 	# https://github.com/odeke-em/drive
-	sudo add-apt-repository ppa:twodopeshaggy/drive
-	sudo apt-get update
-	sudo apt-get install drive
+	# sudo add-apt-repository ppa:twodopeshaggy/drive
+	# sudo apt-get update
+	# sudo apt-get install drive
 
 archives:
 	sudo apt -y install unace unrar zip unzip p7zip-full p7zip-rar sharutils rar uudeview mpack arj cabextract file-roller
@@ -164,7 +168,7 @@ filesystem:
 
 tools:
 	sudo apt -y install htop password-gorilla gnome-tweaks dconf-editor
-	sudo apt -y  rabbitvcs-nautilus git curl vim gparted gnome-disk-utility baobab
+	sudo apt -y install rabbitvcs-nautilus git curl vim gparted gnome-disk-utility baobab
 
 java:
 	sudo apt -y install openjdk-11-jdk 
@@ -212,6 +216,8 @@ code:
 	sudo snap install code --classic
 	sudo snap install pycharm-community --classic
 	# vscode swapescape problem: file>Preferences>Settings  >keyboard.dispatch >keyCode >restart vscode
+	# pycharm colorful terminal: 
+	# echo "-Dspring.output.ansi.enabled=ALWAYS" >> ~/.config/JetBrains/PyCharmCE2020.1/pycharm64.vmoptions
 
 masterpdf:
 	wget https://code-industry.net/public/master-pdf-editor-4.3.89_qt5.amd64.deb
@@ -261,7 +267,28 @@ afsssh:
 	echo "    GSSAPITrustDns yes" >> ~/.ssh/config
 	echo "    GSSAPIAuthentication yes" >> ~/.ssh/config
 	echo "    GSSAPIDelegateCredentials yes" >> ~/.ssh/config
-		
+	
+surfacekernel:
+	# https://github.com/linux-surface/linux-surface/wiki/Installation-and-Setup
+	wget -qO - https://raw.githubusercontent.com/linux-surface/linux-surface/master/pkg/keys/surface.asc | sudo apt-key add -
+	echo "deb [arch=amd64] https://pkg.surfacelinux.com/debian release main" | sudo tee /etc/apt/sources.list.d/linux-surface.list
+	sudo apt-get update
+	sudo apt-get install linux-headers-surface linux-image-surface linux-libc-dev-surface surface-ipts-firmware libwacom-surface
+	sudo apt-get install linux-surface-secureboot-mok  # only if secure boot is still enabled!!!
+	sudo update-grub
+	echo "Please reboot system and enroll certificate. Password: surface"
+	echo "Hint: to fix grub not responding problems, set USB as first boot device in UEFI"
+	echo "Possibly add 'reboot=pci' to kernel parameters"
+	# sudo gedit /etc/default/grub
+	# add 'reboot=pci' into GRUB_CMDLINE_LINUX_DEFAULT after splash
+	# sudo update-grub
+
+
+fixdualboot:
+	# Make ubuntu use local time
+	sudo timedatectl set-local-rtc 1
+	sudo hwclock --systohc --localtime
+	
 historysearch:
 	echo "## arrow up" >> ~/.inputrc
 	echo "\"\\e[A\":history-search-backward" >> ~/.inputrc
