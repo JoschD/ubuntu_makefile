@@ -43,7 +43,16 @@ thinky:
 	make afs
 	
 surfy:
-
+	make preparations
+	make python
+	make latex 
+	make java
+	make nautilus
+	#make code
+	make historysearch
+	make afs
+	make tools
+	make wsl
 
 hurley:
 	@echo "Installation of Hurley targets"
@@ -191,7 +200,8 @@ popos:
 
 nautilus:
 	sudo apt -y install nautilus-image-converter nautilus-wipe
-	#sudo apt -y install nautilus-compare # not yet in 20.04
+	sudo add-apt-repository -y ppa:boamaod/nautilus-compare
+	sudo apt-get -y install nautilus-compare
 	
 gitkraken:
 	sudo snap install gitkraken
@@ -257,6 +267,7 @@ afs:
 	sudo apt install openafs-client openafs-modules-dkms openafs-krb5 krb5-user krb5-config
 	wget http://linux.web.cern.ch/linux/docs/krb5.conf
 	sudo mv -f ./krb5.conf /etc/krb5.conf
+	echo "cern.ch" | sudo tee /etc/openafs/ThisCell
 	# https://gist.github.com/OmeGak/9530124
 	# https://twiki.cern.ch/twiki/bin/view/ABPComputing/AFSDebian
 	
@@ -283,6 +294,9 @@ surfacekernel:
 	# add 'reboot=pci' into GRUB_CMDLINE_LINUX_DEFAULT after splash
 	# sudo update-grub
 
+wsl:
+	# Fixes pyqt output xcb problem
+	sudo apt install -y libxcb-xinerama0
 
 fixdualboot:
 	# Make ubuntu use local time
