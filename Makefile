@@ -183,6 +183,7 @@ java:
 	sudo apt -y install openjdk-11-jdk 
 	sudo apt -y install openjdk-8-jdk
 	#sudo apt -y install openjdk-11-jre
+	sudo sudo apt -y install openjfx
 
 nodejs:
 	curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -
@@ -308,4 +309,12 @@ historysearch:
 	echo "\"\\e[A\":history-search-backward" >> ~/.inputrc
 	echo "## arrow down" >> ~/.inputrc
 	echo "\"\\e[B\":history-search-forward" >> ~/.inputrc
+
+heroku:
+	wget https://cli-assets.heroku.com/heroku-cli/channels/stable/heroku-cli-linux-x64.tar.gz -O
+	tar -xvzf heroku.tar.gz
+	mkdir -p /usr/local/lib /usr/local/bin
+	mv heroku-cli-*-linux-x64 /usr/local/lib/heroku
+	ln -s /usr/local/lib/heroku/bin/heroku /usr/local/bin/heroku
+
 
