@@ -319,14 +319,22 @@ heroku:
 
 eos:
 	# https://cern.service-now.com/service-portal?id=kb_article&sys_id=68deb363db3f0c58006fd9f9f49619aa
-	echo "deb [arch=$$(dpkg --print-architecture)] http://storage-ci.web.cern.ch/storage-ci/debian/xrootd/ $$(lsb_release -cs) stable-4.12.x" | sudo tee -a /etc/apt/sources.list.d/cerneos-client.list > /dev/null
+	make eosinstall
+	make eosconfigs
+	make eosmount	
+
+eosinstall:
+	echo "deb [arch=$$(dpkg --print-architecture)] http://storage-ci.web.cern.ch/storage-ci/debian/xrootd/ $$(lsb_release -cs) stable-4.12.x" | sudo tee /etc/apt/sources.list.d/cerneos-client.list > /dev/null
 	echo "deb [arch=$$(dpkg --print-architecture)] http://storage-ci.web.cern.ch/storage-ci/debian/eos/citrine/ $$(lsb_release -cs) tag" | sudo tee -a /etc/apt/sources.list.d/cerneos-client.list > /dev/null
 	curl -sL http://storage-ci.web.cern.ch/storage-ci/storageci.key | sudo apt-key add -
 	sudo apt update
 	sudo apt install eos-fusex
+
+eosconfigs:
 	sudo mkdir /etc/eos
 	sudo mkdir /eos
-	for letter in a b c d e f g h i j k l m n o p q r s t u v w x y z; do echo "{\"name\":\"home-$${letter}\",\"hostport\":\"eoshome-$${letter}.cern.ch\",\"remotemountdir\":\"/eos/user/$${letter}/\",\"localmountdir\":\"/eos/home-$${letter}/\"}" | sudo tee /etc/eos/fuse.home-$${letter}.conf; sudo mkdir /eos/home-$${letter} ; sudo eosxd -ofsname=home-$${letter} ; done
+	for letter in a b c d e f g h i j k l m n o p q r s t u v w x y z; do echo "{\"name\":\"home-$${letter}\",\"hostport\":\"eoshome-$${letter}.cern.ch\",\"remotemountdir\":\"/eos/user/$${letter}/\",\"localmountdir\":\"/eos/home-$${letter}/\"}" | sudo tee /etc/eos/fuse.home-$${letter}.conf; sudo mkdir /eos/home-$${letter} ; done
+
 
 eosmount:
 	for letter in a b c d e f g h i j k l m n o p q r s t u v w x y z; do sudo eosxd -ofsname=home-$${letter} ; done
