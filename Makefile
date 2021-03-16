@@ -167,7 +167,8 @@ media_extra:
 latex:
 	sudo apt -y install pandoc pandoc-citeproc 
 	sudo apt -y install texlive texlive-latex-extra texlive-latex-base texlive-science texlive-fonts-recommended texlive-latex-recommended texlive-lang-german texlive-xetex 
-	sudo apt -y install preview-latex-style dvipng nbibtex latexmk
+	sudo apt -y install texlive-bibtex-extra texlive-fonts-extra
+	sudo apt -y install preview-latex-style dvipng nbibtex latexmk biber
 
 harddisk:
 	sudo apt -y install smartmontools gsmartcontrol smart-notifier
